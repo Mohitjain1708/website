@@ -46,3 +46,10 @@ export type SalesPath = {
   chapterId: ChapterId;
   mediaId: string;
 };
+
+export type ChapterVideo = {
+  chapterId: Exclude<ChapterId, 'opening'>;
+  title: string;
+  eyebrow: string;
+  videoUrl: string;
+};

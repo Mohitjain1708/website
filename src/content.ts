@@ -1,4 +1,4 @@
-import type { Chapter, MediaItem, ModuleCard, SalesPath } from './types';
+import type { Chapter, ChapterVideo, MediaItem, ModuleCard, SalesPath } from './types';
 
 export const propertyName = 'The Dubai Mall';
 
@@ -185,5 +185,44 @@ export const salesPaths: SalesPath[] = [
     cta: 'Open event path',
     chapterId: 'events',
     mediaId: 'events-reel'
+  }
+];
+
+export const chapterVideos: ChapterVideo[] = [
+  {
+    chapterId: 'scale',
+    title: 'At the heart of Downtown Dubai',
+    eyebrow: 'Scale & access',
+    videoUrl: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4'
+  },
+  {
+    chapterId: 'retail',
+    title: 'Retail at destination scale',
+    eyebrow: 'Retail mix',
+    videoUrl: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4'
+  },
+  {
+    chapterId: 'luxury',
+    title: 'Luxury environment and service cues',
+    eyebrow: 'Fashion Avenue',
+    videoUrl: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4'
+  },
+  {
+    chapterId: 'dining',
+    title: 'Dining-led lifestyle dwell time',
+    eyebrow: 'Dining & lifestyle',
+    videoUrl: 'https://storage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4'
+  },
+  {
+    chapterId: 'entertainment',
+    title: 'Entertainment that drives repeat visits',
+    eyebrow: 'Attractions',
+    videoUrl: 'https://storage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+  },
+  {
+    chapterId: 'events',
+    title: 'Event platform ready for bookings',
+    eyebrow: 'Events & venue',
+    videoUrl: 'https://storage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4'
   }
 ];

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { chapters, heroFacts, mediaReel, moduleCards, propertyName, salesPaths, sources } from './content';
+import { chapterVideos, chapters, heroFacts, mediaReel, moduleCards, propertyName, salesPaths, sources } from './content';
 import type { ChapterId, MediaItem, ModuleCard, SalesPath } from './types';
 
 const chapterOrder: ChapterId[] = ['opening', 'scale', 'retail', 'luxury', 'dining', 'entertainment', 'events'];
@@ -235,6 +235,7 @@ function App() {
         <section className="chapter-grid" data-chapter="scale" id="scale">
           <SectionCopy chapterId="scale" />
           <div className="panel callout">
+            <ChapterVideo chapterId="scale" />
             <p className="section-kicker">Why this property</p>
             <h3>Scale, access, and audience gravity.</h3>
             <p>
@@ -261,6 +262,7 @@ function App() {
         <section className="chapter-grid" data-chapter="retail" id="retail">
           <SectionCopy chapterId="retail" />
           <div className="panel story-panel">
+            <ChapterVideo chapterId="retail" />
             <p className="section-kicker">Retail environment</p>
             <h3>Category depth built for flagship, premium, and pop-up conversations.</h3>
             <div className="story-cards">
@@ -284,6 +286,7 @@ function App() {
           <SectionCopy chapterId="luxury" />
           <div className="panel media-split">
             <div>
+              <ChapterVideo chapterId="luxury" />
               <p className="section-kicker">Luxury layer</p>
               <h3>Fashion Avenue gives the deck its highest-value visual cue.</h3>
               <p>
@@ -311,6 +314,7 @@ function App() {
         <section className="chapter-grid" data-chapter="dining" id="dining">
           <SectionCopy chapterId="dining" />
           <div className="panel spotlight">
+            <ChapterVideo chapterId="dining" />
             <p className="section-kicker">Dining & lifestyle</p>
             <h3>Food is a stay driver, a spend driver, and a sponsorship canvas.</h3>
             <p>
@@ -328,6 +332,7 @@ function App() {
         <section className="chapter-grid" data-chapter="entertainment" id="entertainment">
           <SectionCopy chapterId="entertainment" />
           <div className="panel entertainment-grid">
+            <ChapterVideo chapterId="entertainment" />
             <article>
               <span>Dubai Aquarium & Underwater Zoo</span>
               <p>More than 33,000 animals and a major family draw anchor the entertainment mix.</p>
@@ -346,6 +351,7 @@ function App() {
         <section className="chapter-grid" data-chapter="events" id="events">
           <SectionCopy chapterId="events" />
           <div className="panel event-panel">
+            <ChapterVideo chapterId="events" />
             <div>
               <p className="section-kicker">Events & platform</p>
               <h3>From one-off activations to a dedicated venue story.</h3>
@@ -540,6 +546,26 @@ function VideoStage({ media, onSelectMedia }: { media: MediaItem; onSelectMedia:
           </button>
         ))}
       </div>
+    </figure>
+  );
+}
+
+function ChapterVideo({ chapterId }: { chapterId: Exclude<ChapterId, 'opening'> }) {
+  const chapterVideo = chapterVideos.find((video) => video.chapterId === chapterId);
+
+  if (!chapterVideo) {
+    return null;
+  }
+
+  return (
+    <figure className="section-video">
+      <video autoPlay loop muted playsInline preload="metadata" aria-label={`${chapterVideo.title} video`}>
+        <source src={chapterVideo.videoUrl} type="video/mp4" />
+      </video>
+      <figcaption>
+        <span>{chapterVideo.eyebrow}</span>
+        <strong>{chapterVideo.title}</strong>
+      </figcaption>
     </figure>
   );
 }
