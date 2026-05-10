@@ -1,4 +1,4 @@
-import type { Chapter, MediaItem, ModuleCard } from './types';
+import type { Chapter, MediaItem, ModuleCard, SalesPath } from './types';
 
 export const propertyName = 'The Dubai Mall';
 
@@ -13,42 +13,49 @@ export const chapters: Chapter[] = [
   {
     id: 'opening',
     label: 'Intro',
+    navTitle: 'Launch story',
     title: 'A sales deck that feels like a destination launch.',
     copy: 'Built for screen-shares and standalone links, this deck compresses the property story into a cinematic, non-linear experience that moves prospects toward a leasing, sponsorship, or booking conversation.'
   },
   {
     id: 'scale',
     label: 'Scale',
+    navTitle: 'Access + reach',
     title: 'Downtown Dubai. Global reach. Massive daily gravity.',
     copy: 'The Dubai Mall sits at the heart of Downtown Dubai and presents itself as a city-scale platform, not a conventional shopping center.'
   },
   {
     id: 'retail',
     label: 'Retail',
+    navTitle: 'Retail mix',
     title: '1,200+ outlets with category depth across every consumer tier.',
     copy: 'Retail is the anchor story: flagship labels, premium brands, and an audience that can be segmented by intent, frequency, and spend.'
   },
   {
     id: 'luxury',
     label: 'Luxury',
+    navTitle: 'Fashion Avenue',
     title: 'Fashion Avenue frames the property as a luxury address.',
     copy: 'The luxury layer is where brand partners and high-value tenants feel immediate prestige: curated service, premium adjacency, and a visual language that supports luxury positioning.'
   },
   {
     id: 'dining',
     label: 'Dining',
+    navTitle: 'Lifestyle dining',
     title: 'Dining as dwell time, not filler.',
     copy: 'More than 200 dining experiences turn visits into longer stays, bigger baskets, and more opportunities for partnership storytelling.'
   },
   {
     id: 'entertainment',
     label: 'Entertainment',
+    navTitle: 'Attractions',
     title: 'Attractions that change the role of the property.',
     copy: 'Aquarium, ice rink, VR, museums, kids attractions, and adjacent icons make the mall feel like a ticketed destination every day of the week.'
   },
   {
     id: 'events',
     label: 'Events',
+    navTitle: 'Booking platform',
     title: 'A platform for launch moments, exhibitions, and brand heat.',
     copy: 'The Exhibition Center and surrounding event ecosystem make the deck expandable into deeper venue, sponsorship, and activation modules without a rewrite.'
   }
@@ -147,3 +154,36 @@ export const sources = [
   'Public leasing and contact pathways from the official Dubai Mall site.',
   'Official Dubai Mall public social and media entry points.'
 ] as const;
+
+export const salesPaths: SalesPath[] = [
+  {
+    id: 'leasing',
+    label: 'Leasing',
+    title: 'Pitch the property as a retail engine.',
+    copy: 'Lead with scale, tenant mix, and repeat visitation. Ideal for luxury flagships, premium retail, and pop-up conversations.',
+    bullets: ['High footfall and premium dwell time', 'Luxury and mid-tier leasing paths', 'Strong shopper intent across categories'],
+    cta: 'Open leasing path',
+    chapterId: 'retail',
+    mediaId: 'luxury-reel'
+  },
+  {
+    id: 'sponsorship',
+    label: 'Sponsorship',
+    title: 'Position the mall as a brand platform.',
+    copy: 'Show how partners can own audience attention through seasonal campaigns, iconic visuals, and lifestyle moments.',
+    bullets: ['Brand heat with repeat exposure', 'Activation-friendly public spaces', 'Audience-first partnership story'],
+    cta: 'Open sponsorship path',
+    chapterId: 'events',
+    mediaId: 'attraction-reel'
+  },
+  {
+    id: 'events',
+    label: 'Events',
+    title: 'Sell launches, conferences, and exhibitions.',
+    copy: 'Move the conversation toward booking the venue layer: the Exhibition Center, hospitality adjacency, and premium logistics.',
+    bullets: ['Venue-ready event infrastructure', 'Conference and exhibition potential', 'Direct booking CTA'],
+    cta: 'Open event path',
+    chapterId: 'events',
+    mediaId: 'events-reel'
+  }
+];

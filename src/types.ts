@@ -21,6 +21,7 @@ export type MediaItem = {
 export type Chapter = {
   id: ChapterId;
   label: string;
+  navTitle: string;
   title: string;
   copy: string;
 };
@@ -33,4 +34,15 @@ export type ModuleCard = {
   details: string[];
   cta: string;
   accent: string;
+};
+
+export type SalesPath = {
+  id: string;
+  label: string;
+  title: string;
+  copy: string;
+  bullets: string[];
+  cta: string;
+  chapterId: ChapterId;
+  mediaId: string;
 };

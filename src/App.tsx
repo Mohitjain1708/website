@@ -1,18 +1,90 @@
 import { useEffect, useMemo, useState } from 'react';
-import { chapters, heroFacts, mediaReel, moduleCards, propertyName, sources } from './content';
-import type { ChapterId, MediaItem, ModuleCard } from './types';
+import { chapters, heroFacts, mediaReel, moduleCards, propertyName, salesPaths, sources } from './content';
+import type { ChapterId, MediaItem, ModuleCard, SalesPath } from './types';
 
 const chapterOrder: ChapterId[] = ['opening', 'scale', 'retail', 'luxury', 'dining', 'entertainment', 'events'];
 
 function App() {
   const [activeChapter, setActiveChapter] = useState<ChapterId>('opening');
   const [activeMediaId, setActiveMediaId] = useState(mediaReel[0].id);
-  const [focusedModule, setFocusedModule] = useState<ModuleCard | null>(moduleCards[0]);
+  const [focusedModule, setFocusedModule] = useState<ModuleCard | null>(null);
+  const [activePathId, setActivePathId] = useState<SalesPath['id']>('leasing');
+  const [dealDays, setDealDays] = useState(30);
+  const [dealFootprint, setDealFootprint] = useState(3500);
+  const [dealGuests, setDealGuests] = useState(2000);
 
   const activeMedia = useMemo(
     () => mediaReel.find((item) => item.id === activeMediaId) ?? mediaReel[0],
     [activeMediaId]
   );
+
+  const activePath = useMemo(
+    () => salesPaths.find((path) => path.id === activePathId) ?? salesPaths[0],
+    [activePathId]
+  );
+
+  useEffect(() => {
+    setActiveMediaId(activePath.mediaId);
+    setActiveChapter(activePath.chapterId);
+  }, [activePath]);
+
+  const dealProjection = useMemo(() => {
+    if (activePath.id === 'leasing') {
+      const exposure = Math.round((dealFootprint * dealDays * 0.85) / 100);
+      const projectedSales = Math.round(dealFootprint * 45 * (dealDays / 30));
+      return {
+        labelA: 'Projected exposure',
+        valueA: `${exposure.toLocaleString()}k visits`,
+        labelB: 'Modeled gross sales',
+        valueB: `$${projectedSales.toLocaleString()}`,
+        note: 'Model uses high-footfall flagship assumptions for premium zones.'
+      };
+    }
+
+    if (activePath.id === 'sponsorship') {
+      const impressions = Math.round((dealDays * 1.25 + dealGuests * 0.12) * 1000);
+      const engagement = Math.round(impressions * 0.032);
+      return {
+        labelA: 'Estimated impressions',
+        valueA: `${impressions.toLocaleString()}`,
+        labelB: 'Estimated engagements',
+        valueB: `${engagement.toLocaleString()}`,
+        note: 'Model reflects mixed physical + social amplification from destination-scale activations.'
+      };
+    }
+
+    const attendees = Math.round(dealGuests * (dealDays / 3));
+    const roomNights = Math.round(attendees * 0.24);
+    return {
+      labelA: 'Event attendance potential',
+      valueA: `${attendees.toLocaleString()} guests`,
+      labelB: 'Hospitality spillover',
+      valueB: `${roomNights.toLocaleString()} room nights`,
+      note: 'Model reflects conference and launch-event conversion assumptions near Downtown hotels.'
+    };
+  }, [activePath.id, dealDays, dealFootprint, dealGuests]);
+
+  const inquiryHref = useMemo(() => {
+    const subject = encodeURIComponent(`${activePath.label} discussion | ${propertyName}`);
+    const body = encodeURIComponent(
+      [
+        `Path: ${activePath.label}`,
+        `Campaign/Event Days: ${dealDays}`,
+        `Retail Footprint: ${dealFootprint} sq ft`,
+        `Expected Guests: ${dealGuests}`,
+        `Projection: ${dealProjection.labelA} - ${dealProjection.valueA}; ${dealProjection.labelB} - ${dealProjection.valueB}`
+      ].join('\n')
+    );
+    return `mailto:enquiry@thedubaimall.com?subject=${subject}&body=${body}`;
+  }, [activePath, dealDays, dealFootprint, dealGuests, dealProjection]);
+
+  function handlePathSelect(path: SalesPath) {
+    setActivePathId(path.id);
+    document.querySelector<HTMLElement>(`[data-chapter="${path.chapterId}"]`)?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+    });
+  }
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -55,6 +127,12 @@ function App() {
             A cinematic, self-directed pitch tool for prospective tenants, sponsors, and event partners. Built to
             create immediate buy-in, move fast on live calls, and stand alone as a link.
           </p>
+          <div className="hero-badges" aria-label="Deck positioning">
+            <span>Retail leasing</span>
+            <span>Sponsorship sales</span>
+            <span>Event bookings</span>
+            <span>Screen-share ready</span>
+          </div>
         </div>
 
         <div className="masthead-actions">
@@ -81,7 +159,7 @@ function App() {
             type="button"
           >
             <span>{chapter.label}</span>
-            {chapter.title}
+            <strong>{chapter.navTitle}</strong>
           </button>
         ))}
       </nav>
@@ -97,6 +175,33 @@ function App() {
               narrative.
             </p>
 
+            <div className="path-switcher" aria-label="Select buyer path">
+              {salesPaths.map((path) => (
+                <button
+                  key={path.id}
+                  className={`path-card ${activePath.id === path.id ? 'active' : ''}`}
+                  onClick={() => handlePathSelect(path)}
+                  type="button"
+                >
+                  <span>{path.label}</span>
+                  <strong>{path.title}</strong>
+                </button>
+              ))}
+            </div>
+
+            <div className="path-focus panel">
+              <div>
+                <p className="section-kicker">{activePath.label} focus</p>
+                <h3>{activePath.title}</h3>
+                <p>{activePath.copy}</p>
+              </div>
+              <ul className="path-bullets">
+                {activePath.bullets.map((bullet) => (
+                  <li key={bullet}>{bullet}</li>
+                ))}
+              </ul>
+            </div>
+
             <div className="fact-row" aria-label="Key property facts">
               {heroFacts.map((fact) => (
                 <article className="fact-card" key={fact.label}>
@@ -107,14 +212,17 @@ function App() {
             </div>
 
             <div className="hero-actions">
-              <button className="button button-solid" onClick={() => setActiveMediaId(mediaReel[0].id)} type="button">
-                Luxury reel
+              <button className="button button-solid" onClick={() => setActiveMediaId(activePath.mediaId)} type="button">
+                {activePath.cta}
+              </button>
+              <button className="button button-soft" onClick={() => setFocusedModule(moduleCards[0])} type="button">
+                Open module details
               </button>
               <button className="button button-soft" onClick={() => setActiveMediaId(mediaReel[1].id)} type="button">
                 Attractions reel
               </button>
-              <button className="button button-soft" onClick={() => setActiveMediaId(mediaReel[2].id)} type="button">
-                Events reel
+              <button className="button button-soft" onClick={() => setFocusedModule(moduleCards[1])} type="button">
+                Sponsor module
               </button>
             </div>
           </div>
@@ -286,6 +394,73 @@ function App() {
           </div>
 
           {focusedModule ? <ModuleDrawer module={focusedModule} onClose={() => setFocusedModule(null)} /> : null}
+        </section>
+
+        <section className="simulator panel" id="deal-simulator" aria-label="Commercial projection simulator">
+          <div>
+            <p className="section-kicker">Commercial simulator</p>
+            <h2>Model the opportunity before the call ends.</h2>
+            <p>
+              This quick projection tool turns the current path into estimated outcomes your sales team can discuss in
+              real time during a pitch.
+            </p>
+          </div>
+
+          <div className="sim-grid">
+            <label className="sim-control" htmlFor="deal-days">
+              <span>Campaign or event duration: {dealDays} days</span>
+              <input
+                id="deal-days"
+                type="range"
+                min={7}
+                max={120}
+                step={1}
+                value={dealDays}
+                onChange={(event) => setDealDays(Number(event.target.value))}
+              />
+            </label>
+
+            <label className="sim-control" htmlFor="deal-footprint">
+              <span>Retail footprint: {dealFootprint.toLocaleString()} sq ft</span>
+              <input
+                id="deal-footprint"
+                type="range"
+                min={500}
+                max={10000}
+                step={100}
+                value={dealFootprint}
+                onChange={(event) => setDealFootprint(Number(event.target.value))}
+              />
+            </label>
+
+            <label className="sim-control" htmlFor="deal-guests">
+              <span>Expected audience or guests: {dealGuests.toLocaleString()}</span>
+              <input
+                id="deal-guests"
+                type="range"
+                min={300}
+                max={20000}
+                step={100}
+                value={dealGuests}
+                onChange={(event) => setDealGuests(Number(event.target.value))}
+              />
+            </label>
+
+            <div className="sim-output">
+              <article>
+                <span>{dealProjection.labelA}</span>
+                <strong>{dealProjection.valueA}</strong>
+              </article>
+              <article>
+                <span>{dealProjection.labelB}</span>
+                <strong>{dealProjection.valueB}</strong>
+              </article>
+              <p>{dealProjection.note}</p>
+              <a className="button button-solid" href={inquiryHref}>
+                Send projected inquiry
+              </a>
+            </div>
+          </div>
         </section>
 
         <section className="footer-panel panel">
