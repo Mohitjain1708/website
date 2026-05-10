@@ -30,6 +30,19 @@ npm run dev
 npm run build
 ```
 
+## Deploy (GitHub Pages)
+
+This repository includes a GitHub Actions workflow to deploy automatically to GitHub Pages on every push to `main`.
+
+1. Open your repo settings on GitHub.
+2. Go to `Settings -> Pages`.
+3. Set source to `GitHub Actions`.
+4. Push to `main` (or run the workflow manually).
+
+Expected live URL format:
+
+`https://mohitjain1708.github.io/website/`
+
 ## Design Decisions
 
 - Used a dark luxury palette with gold and aqua accents to match the property positioning.
@@ -64,3 +77,11 @@ If you include the optional submission write-up, use this structure:
 2. How the non-linear deck improves the sales conversation compared with a static slide deck.
 3. Where AI helped speed up research, copy refinement, and visual direction.
 4. What you would add next: deeper venue pages, richer asset sourcing, and analytics.
+
+## Submission Checklist
+
+- Live URL deployed and verified
+- GitHub repository public and readable
+- README includes stack, setup, and deployment instructions
+- Optional write-up included in [docs/submission-writeup.md](docs/submission-writeup.md)
+- Source references and AI usage documented
